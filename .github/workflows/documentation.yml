@@ -1,0 +1,25 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docs
+        run: |
+          mkdir -p public/docs
+          echo "<h1>Heavens Above Project Docs</h1><p>Last updated: $(date)</p>" > public/docs/index.html
+
+      - name: Deploy Docs
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public/docs
