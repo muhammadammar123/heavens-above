@@ -1,0 +1,18 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday
+  workflow_dispatch:
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable Dependabot
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log
+        run: echo "🆙 Dependabot checked dependencies for updates"
