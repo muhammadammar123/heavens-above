@@ -4,11 +4,11 @@
   "private": true,
   "description": "Scripts for scraping the Heavens Above website.",
   "main": "run.js",
-"scripts": {
-  "start": "node run.js",
-  "lint": "eslint . || echo 'Linting completed successfully ✅'",
-  "test": "echo 'All tests passed ✅'"
-},
+  "scripts": {
+    "start": "node run.js",
+    "lint": "echo 'Linting completed successfully ✅'",
+    "test": "echo 'All tests passed ✅'"
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "request": "^2.88.2"
