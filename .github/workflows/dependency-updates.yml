@@ -2,17 +2,51 @@ name: Dependency Updates
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Every Sunday
+    - cron: '22 18 * * 5'  # Every Friday at 11:22 PM PKT (6:22 PM UTC)
   workflow_dispatch:
 
 jobs:
-  dependabot:
+  dependency-update:
     runs-on: ubuntu-latest
-    steps:
-      - name: Enable Dependabot
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log
-        run: echo "🆙 Dependabot checked dependencies for updates"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check outdated dependencies
+        run: npm outdated || true
+
+      - name: Update dependencies
+        run: npm update
+
+      - name: Run tests
+        run: npm test
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b deps-auto-update
+          git add package*.json
+          git commit -m "🔄 Automated dependency updates" || echo "No changes to commit"
+          git push origin deps-auto-update || echo "Branch push skipped"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: deps-auto-update
+          title: "🔄 Automated Dependency Updates"
+          body: |
+            This pull request includes automated updates for outdated dependencies.
+            - Checked and updated dependencies using **npm update**
+            - Verified updates with **npm test**
+            - Please review before merging to ensure compliance with versioning policies.
