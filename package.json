@@ -6,8 +6,11 @@
   "main": "run.js",
   "scripts": {
     "start": "node run.js",
+    "lint": "eslint .",
     "lint": "echo 'Linting completed successfully ✅'",
     "test": "echo 'All tests passed ✅'"
+  
+
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
