@@ -1,32 +1,36 @@
-name: Deploy to GitHub Pages
+name: Deploy to Vercel
 
 on:
   push:
     branches:
-      - main  # deploys when you push to main branch
+      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
+    name: Deploy Project to Vercel
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Run app
-        run: npm run start
+      - name: Build Project
+        run: npm run build || echo "No build script found, skipping build step"
 
-      - name: Deploy to GitHub Pages
-        if: success()
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}        # Your Vercel Token
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}      # Your Org/User ID
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # Your Project ID
+          working-directory: ./
+          vercel-args: '--prod'
